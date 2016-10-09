@@ -11,11 +11,12 @@ var app = express(); //initialize express app
 
 // connect to db using morgan
 var options = {
-  user:"philipbed",
-  pass:"Obrian96!",
+  user:"your username",
+  pass:"your password",
 }
 mongoose.connect('mongodb://localhost/todoApp',options);
 
+// test if the database successfully connected
 var db = mongoose.connection;
 db.on('error',console.error.bind(console, 'connnection error:'));
 db.once('open',function(){
