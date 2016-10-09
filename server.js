@@ -39,10 +39,13 @@ var Task = mongoose.model('Task',{
 
 /** routes **/
 
+//GET
+// home page
 app.get('/',function(request,response){
   response.render('public/index.html',{});
 });
-  //GET
+
+  // api
 app.get('/api/todos', function(request,response) {
   Task.find(function(err,tasks){
     if (err){
@@ -73,6 +76,7 @@ app.post('/api/todos', function(request,response){
     });
 });
 
+// DELETE
 app.delete('/api/todos/:task_id',function(request,response){
   Task.remove({
     _id : request.params.task_id
