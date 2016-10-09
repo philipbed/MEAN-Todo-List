@@ -14,12 +14,19 @@ var options = {
   user:"philipbed",
   pass:"Obrian96!",
 }
-mongoose.connect('mongodb://localhost:27017/todoApp',options);
+mongoose.connect('mongodb://localhost/todoApp',options);
+
+var db = mongoose.connection;
+db.on('error',console.error.bind(console, 'connnection error:'));
+db.once('open',function(){
+  console.log("Successfully connected!");
+})
 
 // configure app
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended':'true'}));
+app.use(bodyParser.json());
 app.use(bodyParser.json({type:'application/vnd.api+json'}));
 app.use(methodOverride());
 
@@ -30,6 +37,10 @@ var Task = mongoose.model('Task',{
 });
 
 /** routes **/
+
+app.get('/',function(request,response){
+  response.render('public/index.html',{});
+});
   //GET
 app.get('/api/todos', function(request,response) {
   Task.find(function(err,tasks){
@@ -61,7 +72,7 @@ app.post('/api/todos', function(request,response){
     });
 });
 
-app.delete('api/todos/:task_id',function(request,response){
+app.delete('/api/todos/:task_id',function(request,response){
   Task.remove({
     _id : request.params.task_id
   }, function(err,task){
@@ -71,10 +82,10 @@ app.delete('api/todos/:task_id',function(request,response){
 
       Task.find(function(err,tasks){
         if(err){
-          res.send(err);
+          response.send(err);
         }
 
-        res.json(tasks);
+        response.json(tasks);
       })
   });
 });
